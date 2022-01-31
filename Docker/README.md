@@ -97,3 +97,33 @@ CMD ["java", "Main"]
 
 ### Multistage build
 
+>build command:
+`docker build -t backendapi .`
+
+>run command: 
+`docker run --rm --network app-network -p 8080:8080 --name api backendapi`
+
+#### dockerfile:
+```dockerfile
+# Build
+FROM maven:3.6.3-jdk-11 AS myapp-build
+ENV MYAPP_HOME /opt/myapp
+WORKDIR $MYAPP_HOME
+COPY pom.xml .
+COPY src ./src
+RUN mvn package -DskipTests
+
+# Run
+FROM openjdk:11-jre
+ENV MYAPP_HOME /opt/myapp
+WORKDIR $MYAPP_HOME
+COPY --from=myapp-build $MYAPP_HOME/target/*.jar $MYAPP_HOME/myapp.jar
+ENTRYPOINT java -jar myapp.jar
+```
+
+**1-2**
+>La première partie (**Build**) permet de build l'executable .jar.
+On part de l'image maven, on spécifie un directory pour placer le .jar avec la var MYAPP_HOME et on y copie les données. On run mvn pour récupérer les packages.
+
+>La deuxième partie (**Run**) permet de lancer le .jar. On se base sur openjdk11, on récupère le .jar qu'on a build avec toute les dependencies ds la première partie, et on la monte. On spécifie ensuite l'entrypoint de notre API avec la dernière ligne, qui sera notre myapp.jar.
+
