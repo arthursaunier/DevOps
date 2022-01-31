@@ -14,16 +14,24 @@ Cmd pour run le docker PostgreSQL:
 `docker run --rm --network app-network -d -p 5432:5432 --name database postgrdb`
 
 Cmd pour run le docker PostgreSQL (avec variable d'environnement):  
-`docker run --rm --network app-network -d -p 5432:5432 -e POSTGRES_USER="usr" POSTGRES_PASSWORD="pwd" --name database postgrdb`
+`docker run --rm --network app-network -d -p 5432:5432 -e POSTGRES_PASSWORD="pwd" --name database postgrdb`
 
 Cmd pour run le docker adminer:  
 `docker run --rm --network app-network -d -p 8080:8080 adminer`
 
-Q1:  
-The `-e` flag allows us to pass environment variables directly to the docker in the docker build cmd. It's more secure than plain text files containing passwords.
+>Q1:  
+The `-e` flag allows us to pass environment variables directly to the docker in the docker build cmd (here the password for example). It's more secure than plain text files containing passwords.
+
+Cmd pour créer un volume:  
+` docker volume create databasedata`
+
+>### Version Finale  
+>  
+>Cmd pour run le docker PostgreSQL:  
+`docker run --rm --network app-network -d -v databasedata:/var/lib/postgresql/data -p 5432:5432 -e POSTGRES_PASSWORD="pwd" --name database postgrdb`
 
 
-#### dockerfile
+#### dockerfile:
 ```dockerfile
 #Based on postgres image
 FROM postgres:11.6-alpine
