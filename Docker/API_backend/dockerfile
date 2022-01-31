@@ -1,0 +1,12 @@
+#use openjdk11
+FROM openjdk:11
+
+#create a folder to put .class in
+RUN mkdir /usr/src/myapp
+COPY Main.class /usr/src/myapp
+
+#specify work directory
+WORKDIR /usr/src/myapp
+
+#cmd to run when launching docker
+CMD ["java", "Main"]

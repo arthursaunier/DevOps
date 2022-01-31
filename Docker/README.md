@@ -33,7 +33,8 @@ The `-e` flag allows us to pass environment variables directly to the docker in 
 >### Version Finale  
 >  
 >Cmd pour run le docker PostgreSQL:  
-`docker run --rm --network app-network -d -v databaseData:/var/lib/postgresql/data -p 5432:5432 -e POSTGRES_PASSWORD="pwd" --name database postgrdb`  
+`docker run --rm --network app-network -d -v $pwd/data:/var/lib/postgre
+sql/data -p 5432:5432 -e POSTGRES_PASSWORD="pwd" --name database postgrdb`
 >
 >Cette partie de la commande permet d'associer le volume local databaseData avec les volume /var/lib/postgresql/data du docker:  
  `-v databaseData:/var/lib/postgresql/data`  
@@ -51,12 +52,34 @@ FROM postgres:11.6-alpine
 EXPOSE 5432
 
 #copy sql scripts to init db
-COPY 01-CreateScheme.sql /docker-entrypoint-initdb.d
-COPY 02-InsertData.sql /docker-entrypoint-initdb.d
+COPY ./script/ /docker-entrypoint-initdb.d
 
 #Env variables
 ENV POSTGRES_DB=db \
-POSTGRES_USER=usr \
-POSTGRES_PASSWORD=pwd
+POSTGRES_USER=usr 
+
 ```
 
+## API
+
+### basics
+
+- Install openjdk11  
+- compile java: `javac Main.java`
+
+#### dockerfile:
+```dockerfile
+#use openjdk11
+FROM openjdk:11
+
+#create a folder to put .class in
+RUN mkdir /usr/src/myapp
+COPY Main.class /usr/src/myapp
+
+#specify work directory
+WORKDIR /usr/src/myapp
+
+#cmd to run when launching docker
+CMD ["java", "Main"]
+
+```
