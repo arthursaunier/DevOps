@@ -4,6 +4,9 @@ FROM postgres:11.6-alpine
 #port
 EXPOSE 5432
 
+#copy sql sccripts to init db
+COPY /sql_script /docker-entrypoint-initdb.d
+
 #Env variables
 ENV POSTGRES_DB=db \
 POSTGRES_USER=usr \
