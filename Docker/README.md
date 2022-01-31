@@ -67,6 +67,17 @@ POSTGRES_USER=usr
 - Install openjdk11  
 - compile java: `javac Main.java`
 
+>build command:
+`docker build -t backendapi .`
+
+>run command: 
+`docker run --rm --network app-network --name api backendapi`
+
+>Output: 
+```
+Hello World! 
+```
+
 #### dockerfile:
 ```dockerfile
 #use openjdk11
@@ -83,3 +94,6 @@ WORKDIR /usr/src/myapp
 CMD ["java", "Main"]
 
 ```
+
+### Multistage build
+
