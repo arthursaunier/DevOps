@@ -1,0 +1,7 @@
+# our base image
+FROM httpd:2.4.52-alpine
+
+COPY ./templates/index.html /usr/local/apache2/htdocs/
+COPY ./httpd.conf /usr/local/apache2/conf/httpd.conf
+
+EXPOSE 5000
