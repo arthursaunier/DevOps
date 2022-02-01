@@ -18,6 +18,7 @@ on:
   push:
     branches: 
       - main
+      - master
       - develop
   pull_request:
 
@@ -30,13 +31,23 @@ jobs:
 
       #do the same with another action (actions/setup-java@v2) that enable to setup jdk 11
       - name: Set up JDK 11
-        uses: actions/checkout@v2
+        uses: actions/setup-java@v2
         with: 
-          ditribution: 'adopt'
           java-version: '11'
+          distribution: 'adopt'
+          
       
       #finally build your app with the latest command
       - name: Build and test with Maven
-        run: mvn clean verify --file ./Docker/API_backend/simple-api-lain/pom.xml
+        run: mvn clean verify --file ./Docker/API_backend/simple-api-main/pom.xml
         
 ```
+
+Attention au typo (qui bloque tout) et aux choix de branche (master!=main)
+
+Le build avec maven:
+```yml
+- name: Build and test with Maven
+        run: mvn clean verify --file ./Docker/API_backend/simple-api-main/pom.xml
+```
+bien spécifier le fichier target de maven avec --file
