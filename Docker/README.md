@@ -33,8 +33,7 @@ The `-e` flag allows us to pass environment variables directly to the docker in 
 >### Version Finale  
 >  
 >Cmd pour run le docker PostgreSQL:  
-`docker run --rm --network app-network -d -v $pwd/data:/var/lib/postgre
-sql/data -p 5432:5432 -e POSTGRES_PASSWORD="pwd" --name database postgrdb`
+`docker run --rm --network app-network -d -v $pwd/data:/var/lib/postgresql/data -p 5432:5432 -e POSTGRES_PASSWORD="pwd" --name database postgrdb`
 >
 >Cette partie de la commande permet d'associer le volume local databaseData avec les volume /var/lib/postgresql/data du docker:  
  `-v databaseData:/var/lib/postgresql/data`  
@@ -161,3 +160,123 @@ management:
 ```
 
 Les même commande pour build ou pour run le conteneur.
+
+## HTTP Server
+
+### Basics
+
+pull image de apache httpd: 
+>docker pull httpd:2.4.52-alpine
+
+Build command:
+>docker build -t apache-server .
+
+Run command: 
+>docker run -dit --network app-network --name http-server --rm -p 5000:80 apache-server
+
+#### dockerfile:
+```dockerfile
+# our base image
+FROM httpd:2.4.52-alpine
+
+COPY ./templates/index.html /usr/local/apache2/htdocs/
+
+EXPOSE 5000
+```
+
+### Configuration
+
+Cmd pour dump la conf:
+>docker cp CONTAINER:/usr/local/apache2/conf/httpd.conf .
+
+On modifie le dockerfile
+
+#### dockerfile:
+```dockerfile
+# our base image
+FROM httpd:2.4.52-alpine
+
+COPY ./templates/index.html /usr/local/apache2/htdocs/
+COPY ./httpd.conf /usr/local/apache2/conf/httpd.conf
+
+EXPOSE 5000
+```
+
+### Reverse Proxy
+
+Dans le fichier httpd.conf, on ajoute:
+```conf
+ServerName localhost
+<VirtualHost *:80>
+ProxyPreserveHost On
+ProxyPass / http://localhost:8080/
+ProxyPassReverse / http://localhost:8080/
+</VirtualHost>
+```
+
+et on charge bien ces 2 modules: 
+```conf
+LoadModule proxy_module modules/mod_proxy.so
+LoadModule proxy_http_module modules/mod_proxy_http.so
+```
+
+Ensuite on build le conteneur puis on le lance de nouveau.
+
+>**Q3**:  
+L'utilisation du reverse proxy permet d'utiliser le serveur comme une gateway. Ici httpd va simplement générer la reponse http et delguera tout le traitement au backend distant. Le reverse proxy est utilisé pour sécuriser les applications, en séparant le backend et donc les données de ce qui est accessible par l'utilisateur. Cela peut aussi être utilisé pour du load balancing, de la haute disponibilité voir pour centraliser l'authentification sur un système.
+
+
+## Link Application
+
+### docker compose
+
+#### docker-copose.yml
+```yml
+version: "3.7"
+
+services:
+
+  api:
+    build: ./API_backend/simple-api-main/ #chemin pour le dockerfile
+    restart: always
+    networks:
+      - app-network
+    depends_on:
+      - database
+  
+  database:
+    build: ./DB
+    restart: always
+    networks:
+      - app-network
+  
+  httpd:
+    build: ./HTTP_Server/
+    restart: always
+    ports: #permet la visibilité du port 80 depuis l'exterieur du conteneur
+      - "80:80"
+    networks:
+      - app-network
+    depends_on: #permet demarrer ce service uniquement après le démarrage de database et api
+      - database
+      - api
+
+networks:
+  app-network:
+```
+
+>**Q**  
+Un docker compose permet de lancer de multiple conteneur en une seule commande, en gérant leur dependance et leur ouverture de port vers l'exterieur.  
+Il permet de lancer l'intégralité des composants d'une application en une seule fois.
+
+**1.3**
+ - build: permet de spécifier le chemin vers le dockerfile correspondant pour build le conteneur
+ - network: permet de spécifier le network dans lequel le conteneur va être placé
+ - ports: les ports ouvert en dehors du network
+ - depends on: permet d'attendre le demarrage d'autre service avant de démarrer.
+
+
+ ### Publish
+
+ >**Q**
+ Publish nos images permet de partager les configurations et l'intégralité du système que nous avons mis en place, et peut permettre de deployer l'application sur une autre machine distante.
