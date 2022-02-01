@@ -127,3 +127,37 @@ On part de l'image maven, on spécifie un directory pour placer le .jar avec la 
 
 >La deuxième partie (**Run**) permet de lancer le .jar. On se base sur openjdk11, on récupère le .jar qu'on a build avec toute les dependencies ds la première partie, et on la monte. On spécifie ensuite l'entrypoint de notre API avec la dernière ligne, qui sera notre myapp.jar.
 
+### Backend API
+
+On récupère les zip de simple-api-main en ligne.
+
+On réutilise le même dockerfile que pour la partie précédente, en le placant dans le nouveau dossier.
+
+Le .yml est mis a jour comme suivi pour que l'API se connecte à la DB.
+
+#### application.yml:
+```yml
+spring:
+  jpa:
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    generate-ddl: false
+    open-in-view: true
+  datasource:
+    url: jdbc:postgresql://database:5432/db
+    username: usr
+    password: pwd
+    driver-class-name: org.postgresql.Driver
+management:
+ server:
+   add-application-context-header: false
+ endpoints:
+   web:
+     exposure:
+       include: health,info,env,metrics,beans,configprops
+```
+
+Les même commande pour build ou pour run le conteneur.
