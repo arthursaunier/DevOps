@@ -16,12 +16,12 @@ jobs:
 
       #do the same with another action (actions/setup-java@v2) that enable to setup jdk 11
       - name: Set up JDK 11
-      - uses: actions/checkout@v2
+        uses: actions/checkout@v2
         with: 
           ditribution: 'adopt'
           java-version: '11'
       
-    #finally build your app with the latest command
+      #finally build your app with the latest command
       - name: Build and test with Maven
         run: mvn clean verify --file ./Docker/API_backend/simple-api-lain/pom.xml
         
