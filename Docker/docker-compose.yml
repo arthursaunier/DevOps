@@ -1,0 +1,32 @@
+version: "3.7"
+
+services:
+
+  api:
+    build: ./API_backend/simple-api-main/
+    restart: always
+    networks:
+      - app-network
+    depends_on:
+      - database
+  
+  database:
+    build: ./DB
+    restart: always
+    networks:
+      - app-network
+  
+  httpd:
+    build: ./HTTP_Server/
+    restart: always
+    ports:
+      - "80:80"
+    networks:
+      - app-network
+    depends_on:
+      - database
+      - api
+
+networks:
+  app-network:
+  
