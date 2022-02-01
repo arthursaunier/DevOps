@@ -20,7 +20,7 @@ jobs:
         uses: actions/setup-java@v2
         with: 
           java-version: '11'
-          ditribution: 'adopt'
+          distribution: 'adopt'
           
       
       #finally build your app with the latest command
