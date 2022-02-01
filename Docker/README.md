@@ -249,6 +249,8 @@ services:
     restart: always
     networks:
       - app-network
+    volumes:
+      - /DB/data:/var/lib/postgresql/data/
   
   httpd:
     build: ./HTTP_Server/

@@ -4,7 +4,7 @@ services:
 
   api:
     build: ./API_backend/simple-api-main/
-    restart: always
+    #restart: always
     networks:
       - app-network
     depends_on:
@@ -12,13 +12,15 @@ services:
   
   database:
     build: ./DB
-    restart: always
+    #restart: always
     networks:
       - app-network
+    volumes:
+      - /DB/data:/var/lib/postgresql/data/
   
   httpd:
     build: ./HTTP_Server/
-    restart: always
+    #restart: always
     ports:
       - "80:80"
     networks:
@@ -29,4 +31,4 @@ services:
 
 networks:
   app-network:
-  
+
