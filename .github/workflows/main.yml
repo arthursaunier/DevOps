@@ -4,7 +4,7 @@ on:
     secrets:
       DOCKERHUB_USERNAME:
         required: true
-      DOCKERHUB_PASSWORD:
+      DOCKERHUB_TOKEN:
         required: true
 jobs:        
   # define job to build and publish docker image
