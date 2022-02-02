@@ -73,3 +73,40 @@ arthur.saunier.takima.cloud | CHANGED => {
     ]
 }
 ```
+
+## Playbooks
+
+### First playbook
+
+Créer le playbook en racine de /ansible
+
+#### playbook
+```yml
+- hosts: all
+  gather_facts: false
+  become: yes
+
+  tasks:
+    - name: Test connection
+      ping:
+```
+
+On test le playbook:
+> ansible-playbook -i inventories/setup.yml playbook.yml
+
+Si on souhaite vérifier la syntax du playbook: 
+> --syntax-check
+
+```bash
+arthur@DESKTOP-CU3J2TG:~/dev/DevOps/ansible$ ansible-playbook -i inventories/setup.yml playbook.yml
+
+PLAY [all] **************************************************************************************************************************************************************************
+
+TASK [Test connection] **************************************************************************************************************************************************************
+ok: [arthur.saunier.takima.cloud]
+
+PLAY RECAP **************************************************************************************************************************************************************************
+arthur.saunier.takima.cloud : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+```
+
+### Advanced playbook
