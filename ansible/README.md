@@ -110,3 +110,86 @@ arthur.saunier.takima.cloud : ok=1    changed=0    unreachable=0    failed=0    
 ```
 
 ### Advanced playbook
+
+Playbook to install docker on our machine
+
+```yml
+- hosts: all
+  gather_facts: false
+  become: yes
+
+  # Install Docker
+  tasks:
+  - name: Clean packages
+    command:
+      cmd: dnf clean -y packages
+
+  - name: Install device-mapper-persistent-data
+    dnf:
+      name: device-mapper-persistent-data
+      state: latest
+
+  - name: Install lvm2
+    dnf:
+      name: lvm2
+      state: latest
+
+  - name: add repo docker
+    command:
+      cmd: sudo dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
+  
+  - name: Install Docker
+    dnf:
+      name: docker-ce
+      state: present
+
+  - name: install python3
+    dnf:
+      name: python3
+
+  - name: Pip install
+    pip:
+      name: docker
+
+  - name: Make sure Docker is running
+    service: name=docker state=started
+    tags: docker
+```
+
+On clean d'abord les packages avant de lancer l'installation, on va ensuite setup les volumes avec device mapper et lvm2.
+On va ensuite créer un repo docker, installer docker et python.  
+La dernière task va tester l'installation de docker
+
+Execution du playbook:
+```bash
+arthur@DESKTOP-CU3J2TG:~/dev/DevOps/ansible$ ansible-playbook -i inventories/setup.yml playbook.yml
+
+PLAY [all] **************************************************************************************************************************************************************************
+TASK [Clean packages] ***************************************************************************************************************************************************************changed: [arthur.saunier.takima.cloud]
+
+TASK [Install device-mapper-persistent-data] ****************************************************************************************************************************************changed: [arthur.saunier.takima.cloud]
+
+TASK [Install lvm2] *****************************************************************************************************************************************************************
+changed: [arthur.saunier.takima.cloud]
+
+TASK [add repo docker] **************************************************************************************************************************************************************
+changed: [arthur.saunier.takima.cloud]
+
+TASK [Install Docker] ***************************************************************************************************************************************************************
+changed: [arthur.saunier.takima.cloud]
+
+TASK [install python3] **************************************************************************************************************************************************************
+changed: [arthur.saunier.takima.cloud]
+
+TASK [Pip install] ******************************************************************************************************************************************************************
+changed: [arthur.saunier.takima.cloud]
+
+TASK [Make sure Docker is running] **************************************************************************************************************************************************
+changed: [arthur.saunier.takima.cloud]
+
+PLAY RECAP **************************************************************************************************************************************************************************
+arthur.saunier.takima.cloud : ok=8    changed=8    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+```
+
+### Using role
+
