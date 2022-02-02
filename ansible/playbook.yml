@@ -3,4 +3,8 @@
   become: yes
   roles:
     - docker
+    - create-network
+    - launch-database
+    - launch-app
+    - launch-proxy
   
