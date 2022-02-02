@@ -4,4 +4,4 @@ all:
     ansible_ssh_private_key_file: /home/arthur/dev/key/id_rsa
   children:
     prod:
-    hosts: arthur.saunier.takima.cloud
+      hosts: arthur.saunier.takima.cloud
