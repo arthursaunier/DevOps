@@ -51,3 +51,6 @@ Le build avec maven:
         run: mvn clean verify --file ./Docker/API_backend/simple-api-main/pom.xml
 ```
 bien spécifier le fichier target de maven avec --file
+
+### First steps into the CD world
+
