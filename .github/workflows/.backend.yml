@@ -11,6 +11,8 @@ on:
 jobs:
   test-backend:
     runs-on: ubuntu-18.04
+    env:
+      working-directory: ./Docker/API_backend/simple-api-main
     steps:
       #checkout your github code using actions/checkout@v2.3.3
       - uses: actions/checkout@v2.3.3
