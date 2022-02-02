@@ -1,2 +1,8 @@
----
 # tasks file for roles/launch-front
+
+- name: Create front
+  docker_container:
+    name: front
+    image: skylaart/devops-tp:front
+    networks:
+      - name: app-network
