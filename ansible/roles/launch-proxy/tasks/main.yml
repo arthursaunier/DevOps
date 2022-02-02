@@ -1,2 +1,10 @@
----
 # tasks file for roles/launch-proxy
+
+- name: Create proxy
+  docker_container:
+    name: proxy
+    image: skylaart/devops-tp:httpd
+    networks:
+      - name: app-network
+    ports:
+      - "80:80"

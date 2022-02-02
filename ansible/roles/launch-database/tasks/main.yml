@@ -1,2 +1,10 @@
----
 # tasks file for roles/launch-database
+
+- name: Create database
+  docker_container:
+    name: tp1-database
+    image: skylaart/devops-tp:database
+    networks:
+      - name: app-network
+    volumes:
+      - /data

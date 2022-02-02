@@ -1,2 +1,8 @@
----
 # tasks file for roles/launch-app
+
+- name: Create App
+  docker_container:
+    name: tp1-api
+    image: skylaart/devops-tp:simple-api
+    networks:
+      - name: app-network
