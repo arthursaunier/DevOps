@@ -2,7 +2,7 @@
 
 - name: Create proxy
   docker_container:
-    name: proxy
+    name: httpd
     image: skylaart/devops-tp:httpd
     networks:
       - name: app-network

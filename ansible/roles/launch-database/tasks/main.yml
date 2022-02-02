@@ -2,7 +2,7 @@
 
 - name: Create database
   docker_container:
-    name: tp1-database
+    name: database
     image: skylaart/devops-tp:database
     networks:
       - name: app-network
