@@ -2,8 +2,8 @@
   gather_facts: false
   become: yes
   roles:
-    - create-network
     - docker
+    - create-network
     - launch-database
     - launch-app
     - launch-proxy

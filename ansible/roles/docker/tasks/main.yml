@@ -21,14 +21,14 @@
   - name: add repo docker
     command:
       cmd: sudo dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
-  
+
   #install the latest version od docker ce
   - name: Install Docker
     dnf:
       name: docker-ce
       state: present
 
-  #install python3
+    #install python3
   - name: install python3
     dnf:
       name: python3
