@@ -193,3 +193,28 @@ arthur.saunier.takima.cloud : ok=8    changed=8    unreachable=0    failed=0    
 
 ### Using role
 
+playbook.yml
+```yml
+- hosts: all
+  gather_facts: false
+  become: yes
+  roles:
+    - docker
+    - create-network
+    - launch-database
+    - launch-app
+    - launch-proxy
+    - launch-front
+```
+
+Un exemple de role:
+```yml
+# tasks file for roles/launch-app
+
+- name: Create App
+  docker_container:
+    name: api
+    image: skylaart/devops-tp:simple-api
+    networks:
+      - name: app-network
+```
